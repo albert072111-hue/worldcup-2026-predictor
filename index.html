@@ -1,0 +1,1171 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2026 World Cup Knockout Predictor</title>
+  <style>
+    :root {
+      --bg: #080a0d;
+      --panel: #12161c;
+      --panel-2: #191f27;
+      --line: #39414c;
+      --text: #f7f7f2;
+      --muted: #9ba6b5;
+      --gold: #f4c95d;
+      --green: #51d88a;
+      --red: #ff5a6b;
+      --blue: #54a7ff;
+      --cyan: #5ce1e6;
+      --shadow: 0 20px 60px rgba(0, 0, 0, .4);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(92,225,230,.14), transparent 28rem),
+        radial-gradient(circle at 95% 8%, rgba(244,201,93,.16), transparent 30rem),
+        linear-gradient(140deg, #050608 0%, #0d1117 42%, #10141b 100%);
+      font-family: Inter, "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+    }
+
+    header {
+      padding: 28px clamp(16px, 3vw, 40px) 18px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: end;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4.6rem);
+      line-height: .92;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      margin-top: 12px;
+      color: var(--muted);
+      max-width: 760px;
+      font-size: .98rem;
+      line-height: 1.55;
+    }
+
+    .status-pill {
+      justify-self: start;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      border-radius: 999px;
+      color: #dce4ef;
+      font-size: .84rem;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 16px var(--green);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .scenario-switch {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.055);
+      border-radius: 8px;
+    }
+
+    .scenario-switch button {
+      min-height: 34px;
+      padding: 0 10px;
+      border-color: transparent;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .scenario-switch button.active {
+      color: #081015;
+      background: var(--gold);
+    }
+
+    button {
+      border: 0;
+      color: var(--text);
+      background: var(--panel-2);
+      border: 1px solid rgba(255,255,255,.1);
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 8px;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform .16s ease, background .16s ease, border-color .16s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.28);
+      background: #222a34;
+    }
+
+    .primary {
+      color: #081015;
+      background: linear-gradient(135deg, var(--gold), #fff1a9);
+      border-color: rgba(244,201,93,.8);
+    }
+
+    main {
+      padding: 0 clamp(12px, 2vw, 28px) 32px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .lead-cards {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1.25fr repeat(3, minmax(0, .8fr));
+      gap: 12px;
+    }
+
+    .lead-card {
+      min-height: 132px;
+      display: grid;
+      gap: 10px;
+      align-content: space-between;
+      padding: 16px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .lead-card.hero-answer {
+      min-height: 170px;
+      background: linear-gradient(135deg, rgba(244,201,93,.22), rgba(92,225,230,.08));
+      border-color: rgba(244,201,93,.35);
+    }
+
+    .lead-label {
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .lead-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .lead-copy {
+      color: var(--muted);
+      font-size: .84rem;
+      line-height: 1.42;
+    }
+
+    .lead-route {
+      color: #f8e9a8;
+      font-size: .86rem;
+      line-height: 1.45;
+    }
+
+    .section-title {
+      grid-column: 1 / -1;
+      display: none;
+      justify-content: space-between;
+      align-items: end;
+      gap: 12px;
+      margin-top: 2px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .section-title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: .84rem;
+    }
+
+    .mobile-matches {
+      display: none;
+      grid-column: 1 / -1;
+      gap: 10px;
+    }
+
+    .mobile-card {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(18, 22, 28, .88);
+      border-radius: 8px;
+    }
+
+    .mobile-card.selected {
+      border-color: rgba(244,201,93,.82);
+    }
+
+    .stage {
+      overflow-x: auto;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(8, 10, 13, .62);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .bracket {
+      min-width: 1260px;
+      display: grid;
+      grid-template-columns: repeat(6, 190px);
+      column-gap: 24px;
+      align-items: center;
+    }
+
+    .round {
+      display: grid;
+      gap: 14px;
+    }
+
+    .round h2 {
+      margin: 0 0 4px;
+      font-size: .78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .match {
+      position: relative;
+      min-height: 106px;
+      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025));
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 8px;
+      padding: 10px;
+      display: grid;
+      gap: 7px;
+    }
+
+    .match.done { border-color: rgba(81,216,138,.42); }
+    .match.future { border-color: rgba(84,167,255,.22); }
+    .match.selected {
+      border-color: rgba(244,201,93,.88);
+      box-shadow: 0 0 0 1px rgba(244,201,93,.34), 0 12px 28px rgba(0,0,0,.28);
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: .68rem;
+      color: var(--muted);
+      min-height: 16px;
+    }
+
+    .team {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 7px 8px;
+      border-radius: 7px;
+      background: rgba(255,255,255,.045);
+      border: 1px solid transparent;
+      min-height: 36px;
+      text-align: left;
+      color: var(--text);
+      font: inherit;
+      font-weight: 750;
+    }
+
+    .team:hover { background: rgba(255,255,255,.09); }
+    .team.locked { cursor: default; }
+    .team.winner {
+      border-color: rgba(244,201,93,.78);
+      background: linear-gradient(135deg, rgba(244,201,93,.26), rgba(255,255,255,.06));
+    }
+
+    .flag { font-size: 1.25rem; line-height: 1; }
+    .name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .score { color: var(--gold); font-variant-numeric: tabular-nums; }
+    .score.prob { color: #bfefff; font-size: .78rem; }
+    .empty { color: #697484; }
+
+    .side {
+      display: grid;
+      gap: 14px;
+    }
+
+    .panel {
+      background: rgba(18, 22, 28, .88);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel h2 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      letter-spacing: 0;
+    }
+
+    .champion {
+      min-height: 128px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border: 1px solid rgba(244,201,93,.24);
+      background: linear-gradient(180deg, rgba(244,201,93,.14), rgba(255,255,255,.03));
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .champion .big {
+      font-size: 2rem;
+      font-weight: 900;
+      margin-top: 6px;
+    }
+
+    .prob-list, .timeline, .source-list, .model-list, .summary-list, .weight-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .prob-row {
+      display: grid;
+      grid-template-columns: 1fr 46px;
+      gap: 10px;
+      align-items: center;
+      font-size: .9rem;
+    }
+
+    .bar {
+      height: 8px;
+      margin-top: 4px;
+      border-radius: 999px;
+      background: #2a313b;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--gold));
+      border-radius: inherit;
+    }
+
+    .timeline li, .source-list li {
+      color: var(--muted);
+      font-size: .84rem;
+      line-height: 1.42;
+    }
+
+    .source-list a { color: #b9dcff; }
+
+    .summary-list li, .weight-list li {
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+      font-size: .84rem;
+      line-height: 1.4;
+    }
+
+    .summary-list strong, .weight-list strong {
+      color: var(--text);
+    }
+
+    .weight-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .model-row {
+      display: grid;
+      gap: 5px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      font-size: .84rem;
+    }
+
+    .model-row:last-child { border-bottom: 0; }
+
+    .model-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      font-weight: 800;
+    }
+
+    .model-meta {
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .insight {
+      display: grid;
+      gap: 12px;
+    }
+
+    .insight-title {
+      display: grid;
+      gap: 6px;
+      font-weight: 900;
+      font-size: 1.02rem;
+    }
+
+    .versus {
+      display: grid;
+      gap: 8px;
+    }
+
+    .versus-row {
+      display: grid;
+      grid-template-columns: 1fr 44px;
+      gap: 10px;
+      align-items: center;
+      font-size: .88rem;
+    }
+
+    .analysis-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: .84rem;
+      line-height: 1.45;
+    }
+
+    .share-box {
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      border-radius: 8px;
+      color: #dce4ef;
+      font-size: .88rem;
+      line-height: 1.5;
+    }
+
+    details.panel summary {
+      cursor: pointer;
+      font-weight: 900;
+      list-style: none;
+    }
+
+    details.panel summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.panel summary::after {
+      content: "+";
+      float: right;
+      color: var(--gold);
+    }
+
+    details.panel[open] summary::after {
+      content: "-";
+    }
+
+    .note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: .78rem;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1020px) {
+      header { grid-template-columns: 1fr; }
+      .toolbar { justify-content: flex-start; }
+      main { grid-template-columns: 1fr; }
+      .lead-cards { grid-template-columns: 1fr 1fr; }
+      .lead-card.hero-answer { grid-column: 1 / -1; }
+      .side { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      .side { grid-template-columns: 1fr; }
+      .lead-cards { grid-template-columns: 1fr; }
+      .lead-card.hero-answer { grid-column: auto; }
+      header { padding-top: 20px; }
+      .toolbar button { flex: 1 1 150px; }
+      .stage { display: none; }
+      .mobile-matches { display: grid; }
+      .section-title { display: flex; align-items: start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <span class="status-pill"><span class="status-dot"></span>戰況更新：2026-07-01 依公開報導整理</span>
+      <h1>Knockout<br>Predictor</h1>
+      <p class="subtitle">把靜態賽程圖改成可操作的冠軍預測器：已完成比賽自動鎖定，未開賽比賽顯示模型勝率，也能用保守、爆冷、主場三種情境推演到冠軍。</p>
+    </div>
+    <div class="toolbar">
+      <div class="scenario-switch" aria-label="預測情境">
+        <button type="button" data-scenario="standard">穩穩看</button>
+        <button type="button" data-scenario="chaos">黑馬劇本</button>
+        <button type="button" data-scenario="host">地主加成</button>
+      </div>
+      <button class="primary" id="autoPredict">用資料模型預測</button>
+      <button id="clearPicks">清除預測</button>
+      <button id="copySummary">複製摘要</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="lead-cards" aria-label="AI 預測重點">
+      <article class="lead-card hero-answer">
+        <div class="lead-label">一句話結論</div>
+        <div class="lead-value" id="leadHeadline">AI 正在計算冠軍</div>
+        <div class="lead-route" id="leadRoute">完成預測後會顯示冠軍路徑。</div>
+        <div class="lead-copy" id="leadConfidence">依目前情境與已知賽果推演。</div>
+      </article>
+      <article class="lead-card">
+        <div class="lead-label">AI 目前最看好</div>
+        <div class="lead-value" id="leadChampion">計算中</div>
+        <div class="lead-copy" id="leadChampionCopy">依目前情境推演冠軍機率。</div>
+      </article>
+      <article class="lead-card">
+        <div class="lead-label">最大黑馬</div>
+        <div class="lead-value" id="leadDarkHorse">計算中</div>
+        <div class="lead-copy" id="leadDarkHorseCopy">找出分數不是最高、但有機會一路闖關的隊伍。</div>
+      </article>
+      <article class="lead-card">
+        <div class="lead-label">最可能爆冷戰</div>
+        <div class="lead-value" id="leadUpset">計算中</div>
+        <div class="lead-copy" id="leadUpsetCopy">雙方勝率最接近的未賽對戰。</div>
+      </article>
+    </section>
+
+    <section class="stage" aria-label="World Cup bracket">
+      <div class="bracket" id="bracket"></div>
+    </section>
+
+    <section class="section-title" aria-label="Mobile match list title">
+      <div>
+        <h2>淘汰賽對戰</h2>
+        <p>手機版用卡片瀏覽；點一場看 AI 分析，點隊名選勝方。</p>
+      </div>
+    </section>
+    <section class="mobile-matches" id="mobileMatches" aria-label="Mobile match cards"></section>
+
+    <aside class="side">
+      <section class="panel">
+        <h2>你的預測</h2>
+        <ul class="summary-list" id="mySummary"></ul>
+        <div class="share-box" id="sharePreview"></div>
+      </section>
+
+      <section class="panel">
+        <h2>單場 AI 分析</h2>
+        <div class="insight" id="matchInsight"></div>
+      </section>
+
+      <section class="panel">
+        <h2>冠軍機率 Top 5</h2>
+        <ul class="prob-list" id="probList"></ul>
+        <p class="note">綜合模型推演，已出局球隊自動排除。</p>
+      </section>
+
+      <details class="panel">
+        <summary>模型怎麼算</summary>
+        <p class="note">分數綜合 AI/超級電腦、賠率市場、Elo 與媒體 power ranking。這裡保留給想看細節的人。</p>
+        <h2>資料來源戰力</h2>
+        <ul class="model-list" id="modelList"></ul>
+        <h2>資料權重</h2>
+        <ul class="weight-list" id="weightList"></ul>
+      </details>
+
+      <details class="panel">
+        <summary>最新賽果與資料來源</summary>
+        <h2>已確認賽果</h2>
+        <ul class="timeline">
+          <li>加拿大 1-0 南非，晉級 16 強。</li>
+          <li>巴西 2-1 日本，晉級 16 強。</li>
+          <li>巴拉圭 1-1 德國，PK 4-3 晉級。</li>
+          <li>摩洛哥 1-1 荷蘭，PK 3-2 晉級。</li>
+          <li>挪威 2-1 象牙海岸，晉級 16 強。</li>
+          <li>法國 3-0 瑞典，晉級 16 強。</li>
+        </ul>
+        <h2>資料來源</h2>
+        <ul class="source-list">
+          <li><a href="https://www.si.com/soccer/supercomputer-predicts-2026-world-cup-winner-after-group-stage-concludes" target="_blank" rel="noreferrer">Sports Illustrated：Opta 超級電腦小組賽後冠軍機率</a></li>
+          <li><a href="https://sports.betmgm.com/en/blog/soccer/2026-world-cup-odds-betting-favorites-to-win-bm16/" target="_blank" rel="noreferrer">BetMGM：冠軍賠率市場訊號</a></li>
+          <li><a href="https://www.worldfootball.net/teams/" target="_blank" rel="noreferrer">World Football Elo：國家隊 Elo 強度參考</a></li>
+          <li><a href="https://www.espn.com/soccer/story/_/id/45264398/world-cup-power-rankings-48-team-field" target="_blank" rel="noreferrer">ESPN：世界盃 power ranking 參考</a></li>
+          <li><a href="https://www.sbnation.com/soccer/1120771/world-cup-schedule-scores-round-32" target="_blank" rel="noreferrer">SB Nation：Round of 32 賽程與比分</a></li>
+        </ul>
+      </details>
+    </aside>
+  </main>
+
+  <script>
+    const teams = {
+      GER:{name:"德國", flag:"🇩🇪", rating:87, signal:"Elo/賠率仍高，但已被巴拉圭淘汰"},
+      PAR:{name:"巴拉圭", flag:"🇵🇾", rating:72, signal:"淘汰德國後上修，原始市場評價偏中段"},
+      FRA:{name:"法國", flag:"🇫🇷", rating:96, signal:"Opta 小組賽後第 1，賠率與 Elo 皆屬頂級"},
+      SWE:{name:"瑞典", flag:"🇸🇪", rating:77, signal:"歐洲中上游，已被法國淘汰"},
+      RSA:{name:"南非", flag:"🇿🇦", rating:66, signal:"賽前模型偏低，已被加拿大淘汰"},
+      CAN:{name:"加拿大", flag:"🇨🇦", rating:73, signal:"晉級後上修，但國際模型仍非奪冠熱門"},
+      NED:{name:"荷蘭", flag:"🇳🇱", rating:86, signal:"賽前模型強，但已被摩洛哥淘汰"},
+      MAR:{name:"摩洛哥", flag:"🇲🇦", rating:78, signal:"防守與淘汰賽韌性加分，爆冷晉級後上修"},
+      POR:{name:"葡萄牙", flag:"🇵🇹", rating:84, signal:"賠率與 Elo 高於克羅埃西亞，模型看好晉級"},
+      CRO:{name:"克羅埃西亞", flag:"🇭🇷", rating:76, signal:"淘汰賽經驗強，但整體賠率低於葡萄牙"},
+      ESP:{name:"西班牙", flag:"🇪🇸", rating:91, signal:"Opta 第 3，賠率市場前段班"},
+      AUT:{name:"奧地利", flag:"🇦🇹", rating:75, signal:"歐洲穩定型球隊，模型仍視為下位挑戰者"},
+      USA:{name:"美國", flag:"🇺🇸", rating:74, signal:"主場與籤表加分，但 Elo/賠率未到第一梯隊"},
+      BIH:{name:"波士尼亞", flag:"🇧🇦", rating:68, signal:"模型長線評估偏低"},
+      BEL:{name:"比利時", flag:"🇧🇪", rating:80, signal:"仍有個人能力，但國際模型評價低於巔峰期"},
+      SEN:{name:"塞內加爾", flag:"🇸🇳", rating:75, signal:"非洲強隊，爆冷機率不低但冠軍路徑偏難"},
+      BRA:{name:"巴西", flag:"🇧🇷", rating:88, signal:"賠率與 Elo 前段，已晉級後維持熱門"},
+      JPN:{name:"日本", flag:"🇯🇵", rating:79, signal:"亞洲最高梯隊之一，已被巴西淘汰"},
+      CIV:{name:"象牙海岸", flag:"🇨🇮", rating:73, signal:"身體對抗強，已被挪威淘汰"},
+      NOR:{name:"挪威", flag:"🇳🇴", rating:81, signal:"晉級後上修，進攻端個人能力讓模型加分"},
+      MEX:{name:"墨西哥", flag:"🇲🇽", rating:77, signal:"主場區域優勢，但長線冠軍市場非熱門"},
+      ECU:{name:"厄瓜多", flag:"🇪🇨", rating:76, signal:"防守與轉換強，模型評價接近墨西哥"},
+      ENG:{name:"英格蘭", flag:"🏴", rating:89, signal:"Opta 第 4，賠率長期前段班"},
+      COD:{name:"剛果民主共和國", flag:"🇨🇩", rating:65, signal:"黑馬籤位，但資料模型分數偏低"},
+      ARG:{name:"阿根廷", flag:"🇦🇷", rating:94, signal:"Opta 第 2，賠率與 Elo 皆在冠軍熱門"},
+      CPV:{name:"維德角", flag:"🇨🇻", rating:64, signal:"本屆黑馬，但模型長線冠軍機率低"},
+      AUS:{name:"澳洲", flag:"🇦🇺", rating:70, signal:"穩定但上限評價低於埃及"},
+      EGY:{name:"埃及", flag:"🇪🇬", rating:76, signal:"個人能力與非洲賽事經驗加分"},
+      SUI:{name:"瑞士", flag:"🇨🇭", rating:78, signal:"穩定守序，模型略看好勝過阿爾及利亞"},
+      ALG:{name:"阿爾及利亞", flag:"🇩🇿", rating:74, signal:"進攻端有爆點，但整體共識分稍低"},
+      COL:{name:"哥倫比亞", flag:"🇨🇴", rating:82, signal:"南美強隊，Elo/power ranking 位居第二梯隊"},
+      GHA:{name:"迦納", flag:"🇬🇭", rating:73, signal:"淘汰賽黑馬可能性高於長線冠軍機率"}
+    };
+
+    const rounds = [
+      { key:"r32a", label:"32 強 A", matches:["m74","m77","m73","m75","m83","m84","m81","m82"] },
+      { key:"r32b", label:"32 強 B", matches:["m76","m78","m79","m80","m86","m88","m85","m87"] },
+      { key:"r16", label:"16 強", matches:["m89","m90","m93","m94","m91","m92","m95","m96"] },
+      { key:"qf", label:"8 強", matches:["qf1","qf2","qf3","qf4"] },
+      { key:"sf", label:"4 強", matches:["sf1","sf2"] },
+      { key:"final", label:"決賽", matches:["final"] }
+    ];
+
+    const matches = {
+      m74:{code:"M74", time:"已完成", teams:["GER","PAR"], score:{GER:"1",PAR:"1"}, note:"PK 3-4", actual:"PAR"},
+      m77:{code:"M77", time:"已完成", teams:["FRA","SWE"], score:{FRA:"3",SWE:"0"}, actual:"FRA"},
+      m73:{code:"M73", time:"已完成", teams:["RSA","CAN"], score:{RSA:"0",CAN:"1"}, actual:"CAN"},
+      m75:{code:"M75", time:"已完成", teams:["NED","MAR"], score:{NED:"1",MAR:"1"}, note:"PK 2-3", actual:"MAR"},
+      m83:{code:"M83", time:"7/2 07:00 TPE", teams:["POR","CRO"]},
+      m84:{code:"M84", time:"7/2 03:00 TPE", teams:["ESP","AUT"]},
+      m81:{code:"M81", time:"7/2 08:00 TPE", teams:["USA","BIH"]},
+      m82:{code:"M82", time:"7/2 04:00 TPE", teams:["BEL","SEN"]},
+      m76:{code:"M76", time:"已完成", teams:["BRA","JPN"], score:{BRA:"2",JPN:"1"}, actual:"BRA"},
+      m78:{code:"M78", time:"已完成", teams:["CIV","NOR"], score:{CIV:"1",NOR:"2"}, actual:"NOR"},
+      m79:{code:"M79", time:"7/1 09:00 TPE", teams:["MEX","ECU"]},
+      m80:{code:"M80", time:"7/2 00:00 TPE", teams:["ENG","COD"]},
+      m86:{code:"M86", time:"7/4 06:00 TPE", teams:["ARG","CPV"]},
+      m88:{code:"M88", time:"7/4 02:00 TPE", teams:["AUS","EGY"]},
+      m85:{code:"M85", time:"7/3 11:00 TPE", teams:["SUI","ALG"]},
+      m87:{code:"M87", time:"7/4 09:30 TPE", teams:["COL","GHA"]},
+      m89:{code:"M89", time:"16 強", from:["m74","m77"]},
+      m90:{code:"M90", time:"16 強", from:["m73","m75"]},
+      m93:{code:"M93", time:"16 強", from:["m83","m84"]},
+      m94:{code:"M94", time:"16 強", from:["m81","m82"]},
+      m91:{code:"M91", time:"16 強", from:["m76","m78"]},
+      m92:{code:"M92", time:"16 強", from:["m79","m80"]},
+      m95:{code:"M95", time:"16 強", from:["m86","m88"]},
+      m96:{code:"M96", time:"16 強", from:["m85","m87"]},
+      qf1:{code:"QF1", time:"8 強", from:["m89","m90"]},
+      qf2:{code:"QF2", time:"8 強", from:["m93","m94"]},
+      qf3:{code:"QF3", time:"8 強", from:["m91","m92"]},
+      qf4:{code:"QF4", time:"8 強", from:["m95","m96"]},
+      sf1:{code:"SF1", time:"4 強", from:["qf1","qf2"]},
+      sf2:{code:"SF2", time:"4 強", from:["qf3","qf4"]},
+      final:{code:"FINAL", time:"冠軍戰", from:["sf1","sf2"]}
+    };
+
+    const scenarios = {
+      standard: { label:"穩穩看", spread:18, favoriteTax:0, underdogLift:0, hostBoost:0, note:"比較相信強隊、賠率和 Elo 共識。" },
+      chaos: { label:"黑馬劇本", spread:30, favoriteTax:3, underdogLift:3, hostBoost:0, note:"把爆冷機率拉高，弱隊不會太快被模型放棄。" },
+      host: { label:"地主加成", spread:20, favoriteTax:0, underdogLift:0, hostBoost:5, note:"美國、墨西哥、加拿大多一點主場與旅程優勢。" }
+    };
+    const hostTeams = new Set(["USA", "MEX", "CAN"]);
+    const modelWeights = [
+      { label:"AI / 超級電腦", value:35, note:"用來捕捉小組賽後的整體冠軍機率與路徑強弱。" },
+      { label:"冠軍賠率市場", value:30, note:"反映市場對陣容、傷兵、人氣與路徑的綜合定價。" },
+      { label:"Elo 強度", value:25, note:"偏重長期國家隊實力與穩定性。" },
+      { label:"媒體 Power Ranking", value:10, note:"補入近期狀態、敘事與專家觀察。" }
+    ];
+
+    const state = {
+      picks: JSON.parse(localStorage.getItem("wc26-picks") || "{}"),
+      scenario: localStorage.getItem("wc26-scenario") || "standard",
+      selectedMatch: localStorage.getItem("wc26-selected-match") || "m79"
+    };
+    localStorage.removeItem("wc26-ratings");
+
+    function save() {
+      localStorage.setItem("wc26-picks", JSON.stringify(state.picks));
+      localStorage.setItem("wc26-scenario", state.scenario);
+      localStorage.setItem("wc26-selected-match", state.selectedMatch);
+    }
+
+    function entrant(matchId, slot) {
+      const match = matches[matchId];
+      if (match.teams) return match.teams[slot];
+      const source = match.from?.[slot];
+      return source ? winner(source) : null;
+    }
+
+    function winner(matchId) {
+      const match = matches[matchId];
+      return match.actual || state.picks[matchId] || null;
+    }
+
+    function participants(matchId) {
+      return [entrant(matchId, 0), entrant(matchId, 1)];
+    }
+
+    function canPick(matchId, teamId) {
+      const match = matches[matchId];
+      const pair = participants(matchId);
+      return !match.actual && teamId && pair.includes(teamId);
+    }
+
+    function pick(matchId, teamId) {
+      if (!canPick(matchId, teamId)) return;
+      state.picks[matchId] = teamId;
+      pruneInvalidPicks();
+      save();
+      render();
+    }
+
+    function pruneInvalidPicks() {
+      Object.keys(state.picks).forEach(matchId => {
+        if (!participants(matchId).includes(state.picks[matchId])) delete state.picks[matchId];
+      });
+    }
+
+    function teamButton(matchId, teamId) {
+      const match = matches[matchId];
+      const pair = participants(matchId);
+      const projected = !match.actual && pair[0] && pair[1];
+      const pct = projected && teamId
+        ? Math.round((teamId === pair[0] ? probability(pair[0], pair[1]) : 1 - probability(pair[0], pair[1])) * 100) + "%"
+        : "";
+      const button = document.createElement("button");
+      button.className = "team";
+      const isWinner = winner(matchId) === teamId;
+      const locked = !!match.actual || !teamId;
+      if (isWinner) button.classList.add("winner");
+      if (locked) button.classList.add("locked");
+      button.disabled = !teamId || !!match.actual;
+      button.innerHTML = teamId
+        ? `<span class="flag">${teams[teamId].flag}</span><span class="name">${teams[teamId].name}</span><span class="score ${pct ? "prob" : ""}">${match.score?.[teamId] ?? pct}</span>`
+        : `<span class="flag">·</span><span class="name empty">待定</span><span></span>`;
+      button.addEventListener("click", () => pick(matchId, teamId));
+      return button;
+    }
+
+    function renderBracket() {
+      const root = document.getElementById("bracket");
+      root.innerHTML = "";
+      rounds.forEach(round => {
+        const col = document.createElement("section");
+        col.className = "round";
+        col.innerHTML = `<h2>${round.label}</h2>`;
+        round.matches.forEach(matchId => {
+          const match = matches[matchId];
+          const pair = participants(matchId);
+          const node = document.createElement("article");
+          node.className = `match ${match.actual ? "done" : "future"}`;
+          if (state.selectedMatch === matchId) node.classList.add("selected");
+          node.addEventListener("click", () => {
+            state.selectedMatch = matchId;
+            save();
+            render();
+          });
+          node.innerHTML = `<div class="meta"><span>${match.code}</span><span>${match.note || match.time}</span></div>`;
+          node.appendChild(teamButton(matchId, pair[0]));
+          node.appendChild(teamButton(matchId, pair[1]));
+          col.appendChild(node);
+        });
+        root.appendChild(col);
+      });
+    }
+
+    function renderMobileMatches() {
+      const root = document.getElementById("mobileMatches");
+      root.innerHTML = "";
+      rounds.slice(0, 2).flatMap(round => round.matches.map(matchId => ({ round, matchId }))).forEach(({ round, matchId }) => {
+        const match = matches[matchId];
+        const pair = participants(matchId);
+        const node = document.createElement("article");
+        node.className = "mobile-card";
+        if (state.selectedMatch === matchId) node.classList.add("selected");
+        node.addEventListener("click", () => {
+          state.selectedMatch = matchId;
+          save();
+          render();
+        });
+        node.innerHTML = `<div class="meta"><span>${round.label} · ${match.code}</span><span>${match.note || match.time}</span></div>`;
+        node.appendChild(teamButton(matchId, pair[0]));
+        node.appendChild(teamButton(matchId, pair[1]));
+        root.appendChild(node);
+      });
+    }
+
+    function predictWinner(a, b) {
+      if (!a) return b;
+      if (!b) return a;
+      return adjustedRating(a) >= adjustedRating(b) ? a : b;
+    }
+
+    function autoPredict() {
+      rounds.flatMap(r => r.matches).forEach(matchId => {
+        if (matches[matchId].actual) return;
+        const [a, b] = participants(matchId);
+        if (a && b) state.picks[matchId] = predictWinner(a, b);
+      });
+      pruneInvalidPicks();
+      save();
+      render();
+    }
+
+    function probability(a, b) {
+      const scenario = scenarios[state.scenario] || scenarios.standard;
+      const diff = adjustedRating(a) - adjustedRating(b);
+      return 1 / (1 + Math.pow(10, -diff / scenario.spread));
+    }
+
+    function adjustedRating(id) {
+      const scenario = scenarios[state.scenario] || scenarios.standard;
+      let score = teams[id].rating;
+      if (hostTeams.has(id)) score += scenario.hostBoost;
+      if (score >= 88) score -= scenario.favoriteTax;
+      if (score <= 76) score += scenario.underdogLift;
+      return score;
+    }
+
+    function simulationSeed() {
+      const payload = `${state.scenario}|${JSON.stringify(state.picks)}`;
+      let hash = 2166136261;
+      for (let i = 0; i < payload.length; i += 1) {
+        hash ^= payload.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+      return hash >>> 0;
+    }
+
+    function seededRandom(seed) {
+      let value = seed || 1;
+      return () => {
+        value = Math.imul(value ^ (value >>> 15), 1 | value);
+        value ^= value + Math.imul(value ^ (value >>> 7), 61 | value);
+        return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function simulateOnce(random = Math.random) {
+      const simWinners = {};
+      const getWinner = id => matches[id].actual || simWinners[id];
+      rounds.flatMap(r => r.matches).forEach(matchId => {
+        const match = matches[matchId];
+        if (match.actual) return;
+        const pair = match.teams ? match.teams : match.from.map(getWinner);
+        const [a, b] = pair;
+        if (!a || !b) return;
+        simWinners[matchId] = random() < probability(a, b) ? a : b;
+      });
+      return getWinner("final");
+    }
+
+    function championProbabilityRows(runs = 5000) {
+      const counts = {};
+      const random = seededRandom(simulationSeed() + runs);
+      for (let i = 0; i < runs; i += 1) {
+        const champ = simulateOnce(random);
+        if (champ) counts[champ] = (counts[champ] || 0) + 1;
+      }
+      return Object.entries(counts)
+        .map(([id, count]) => ({ id, pct: count / runs * 100 }))
+        .sort((a, b) => b.pct - a.pct);
+    }
+
+    function renderProbabilities() {
+      const rows = championProbabilityRows().slice(0, 5);
+      const list = document.getElementById("probList");
+      list.innerHTML = "";
+      rows.forEach(row => {
+        const li = document.createElement("li");
+        li.className = "prob-row";
+        li.innerHTML = `
+          <div>
+            <strong>${teams[row.id].flag} ${teams[row.id].name}</strong>
+            <div class="bar"><div class="fill" style="width:${row.pct}%"></div></div>
+          </div>
+          <span>${row.pct.toFixed(1)}%</span>`;
+        list.appendChild(li);
+      });
+    }
+
+    function renderLeadCards() {
+      const rows = championProbabilityRows(3000);
+      const top = rows[0];
+      if (top) {
+        const confidence = confidenceLabel(top.pct);
+        document.getElementById("leadHeadline").textContent = `AI 預測 ${teams[top.id].name} 最有冠軍相`;
+        document.getElementById("leadRoute").textContent = predictedRoute(top.id);
+        document.getElementById("leadConfidence").textContent = `${confidence}，目前冠軍機率 ${top.pct.toFixed(1)}%。切換情境會改變推演結果。`;
+        document.getElementById("leadChampion").textContent = `${teams[top.id].flag} ${teams[top.id].name}`;
+        document.getElementById("leadChampionCopy").textContent = `${top.pct.toFixed(1)}% 冠軍機率，依目前「${scenarios[state.scenario].label}」情境推演。`;
+      }
+
+      const darkHorse = rows.find(row => adjustedRating(row.id) < 82) || rows.find(row => adjustedRating(row.id) < 86) || rows[1];
+      if (darkHorse) {
+        document.getElementById("leadDarkHorse").textContent = `${teams[darkHorse.id].flag} ${teams[darkHorse.id].name}`;
+        document.getElementById("leadDarkHorseCopy").textContent = `${darkHorse.pct.toFixed(1)}% 長線機率，分數不是最高但路徑仍有想像空間。`;
+      }
+
+      const upset = closestUpcomingMatch();
+      if (upset) {
+        document.getElementById("leadUpset").textContent = `${teams[upset.a].name} vs ${teams[upset.b].name}`;
+        document.getElementById("leadUpsetCopy").textContent = `勝率 ${upset.pa}% / ${upset.pb}%，這場最像五五波。`;
+      }
+    }
+
+    function confidenceLabel(pct) {
+      if (pct >= 32) return "高信心";
+      if (pct >= 18) return "中信心";
+      return "低信心";
+    }
+
+    function predictedRoute(champId) {
+      const route = [];
+      rounds.flatMap(round => round.matches).forEach(matchId => {
+        const pair = participants(matchId);
+        if (!pair.includes(champId)) return;
+        const opponent = pair.find(id => id && id !== champId);
+        if (opponent) route.push(teams[opponent].name);
+      });
+      return route.length ? `可能路徑：${route.join(" → ")}` : "可能路徑會隨著 bracket 預測逐步形成。";
+    }
+
+    function closestUpcomingMatch() {
+      const candidates = rounds.flatMap(round => round.matches)
+        .filter(matchId => !matches[matchId].actual)
+        .map(matchId => {
+          const [a, b] = participants(matchId);
+          if (!a || !b) return null;
+          const pa = Math.round(probability(a, b) * 100);
+          return { matchId, a, b, pa, pb: 100 - pa, gap: Math.abs(50 - pa) };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.gap - b.gap);
+      return candidates[0];
+    }
+
+    function renderChampion() {
+      const champ = winner("final");
+      const box = document.getElementById("championBox");
+      if (!box) return;
+      box.innerHTML = champ
+        ? `<div><div style="font-size:2.4rem">${teams[champ].flag}</div><div class="big">${teams[champ].name}</div><div class="note">依你目前 bracket 選擇推進</div></div>`
+        : `<div><div style="font-size:2.4rem">🏆</div><div class="big">尚未選出</div><div class="note">點選每場勝方或使用一鍵模型預測</div></div>`;
+    }
+
+    function renderMySummary() {
+      const list = document.getElementById("mySummary");
+      const champ = winner("final");
+      const finalists = participants("final").filter(Boolean);
+      const aiRows = championProbabilityRows(3000);
+      const aiChamp = aiRows[0]?.id;
+      const aiPct = aiRows[0]?.pct || 0;
+      const completedPicks = Object.keys(state.picks).length;
+      const rows = [
+        {
+          title:"我的冠軍",
+          text: champ ? `${teams[champ].flag} ${teams[champ].name}` : "尚未選出，先按資料模型預測或一路點選勝方。"
+        },
+        {
+          title:"我的決賽",
+          text: finalists.length === 2 ? `${teams[finalists[0]].name} vs ${teams[finalists[1]].name}` : "決賽組合尚未形成。"
+        },
+        {
+          title:"和 AI 是否一致",
+          text: champ && aiChamp ? (champ === aiChamp ? `一致，AI 也看好 ${teams[champ].name}。` : `不同，AI 目前更看好 ${teams[aiChamp].name}。`) : "選出冠軍後會自動比較。"
+        },
+        {
+          title:"已手動選擇",
+          text: `${completedPicks} 場；清除後會回到只有真實賽果的狀態。`
+        }
+      ];
+      list.innerHTML = rows.map(row => `<li><strong>${row.title}</strong><span>${row.text}</span></li>`).join("");
+      document.getElementById("sharePreview").textContent = shareSentence(aiChamp, aiPct, champ);
+    }
+
+    function shareSentence(aiChamp, aiPct, userChamp) {
+      const darkHorse = championProbabilityRows(3000).find(row => adjustedRating(row.id) < 82);
+      const upset = closestUpcomingMatch();
+      const aiText = aiChamp ? `AI 目前看好 ${teams[aiChamp].name} 奪冠，機率約 ${aiPct.toFixed(1)}%` : "AI 冠軍預測尚未形成";
+      const horseText = darkHorse ? `最大黑馬是 ${teams[darkHorse.id].name}` : "黑馬仍不明朗";
+      const upsetText = upset ? `最可能五五波的是 ${teams[upset.a].name} vs ${teams[upset.b].name}` : "目前沒有可判斷的未賽對戰";
+      const userText = userChamp ? `我的 bracket 冠軍是 ${teams[userChamp].name}` : "我還沒選出自己的冠軍";
+      return `${aiText}；${horseText}；${upsetText}。${userText}。`;
+    }
+
+    function renderMatchInsight() {
+      const box = document.getElementById("matchInsight");
+      const matchId = state.selectedMatch;
+      const match = matches[matchId] || matches.m79;
+      const pair = participants(matchId);
+      if (!pair[0] || !pair[1]) {
+        box.innerHTML = `<div class="note">這場的上游對戰尚未決定。先完成前一輪預測後，這裡會顯示勝率與分析。</div>`;
+        return;
+      }
+
+      const [a, b] = pair;
+      const pa = match.actual ? (match.actual === a ? 1 : 0) : probability(a, b);
+      const pb = 1 - pa;
+      const pickId = match.actual || predictWinner(a, b);
+      const diff = Math.abs(adjustedRating(a) - adjustedRating(b));
+      const upsetRisk = match.actual ? "已完成" : diff < 4 ? "高" : diff < 10 ? "中" : "低";
+      const scenario = scenarios[state.scenario] || scenarios.standard;
+      box.innerHTML = `
+        <div class="insight-title">
+          <span>${match.code} ${teams[a].flag} ${teams[a].name} vs ${teams[b].flag} ${teams[b].name}</span>
+          <span class="note">${scenario.label}：${scenario.note}</span>
+        </div>
+        <div class="versus">
+          ${insightRow(a, pa)}
+          ${insightRow(b, pb)}
+        </div>
+        <ul class="analysis-list">
+          <li>模型選擇：${teams[pickId].flag} ${teams[pickId].name}</li>
+          <li>共識分差：${diff.toFixed(1)}，爆冷風險：${upsetRisk}</li>
+          <li>${teams[a].name}：${teams[a].signal}</li>
+          <li>${teams[b].name}：${teams[b].signal}</li>
+        </ul>`;
+    }
+
+    function insightRow(id, pct) {
+      return `
+        <div class="versus-row">
+          <div>
+            <strong>${teams[id].flag} ${teams[id].name}</strong>
+            <div class="bar"><div class="fill" style="width:${Math.round(pct * 100)}%"></div></div>
+          </div>
+          <span>${Math.round(pct * 100)}%</span>
+        </div>`;
+    }
+
+    function renderScenarioSwitch() {
+      document.querySelectorAll("[data-scenario]").forEach(button => {
+        button.classList.toggle("active", button.dataset.scenario === state.scenario);
+      });
+    }
+
+    function renderModelSignals() {
+      const alive = new Set();
+      Object.keys(teams).forEach(id => {
+        const eliminated = Object.values(matches).some(match => match.actual && match.teams?.includes(id) && match.actual !== id);
+        if (!eliminated) alive.add(id);
+      });
+      const ids = Array.from(alive).sort((a, b) => adjustedRating(b) - adjustedRating(a)).slice(0, 12);
+      const list = document.getElementById("modelList");
+      list.innerHTML = "";
+      ids.forEach(id => {
+        const score = adjustedRating(id);
+        const li = document.createElement("li");
+        li.className = "model-row";
+        li.innerHTML = `
+          <div class="model-head"><span>${teams[id].flag} ${teams[id].name}</span><strong>${score}</strong></div>
+          <div class="bar"><div class="fill" style="width:${score}%"></div></div>
+          <div class="model-meta">${teams[id].signal}</div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function renderWeights() {
+      const list = document.getElementById("weightList");
+      list.innerHTML = modelWeights.map(item => `
+        <li>
+          <div class="weight-head"><span>${item.label}</span><span>${item.value}%</span></div>
+          <div class="bar"><div class="fill" style="width:${item.value}%"></div></div>
+          <span>${item.note}</span>
+        </li>`).join("");
+    }
+
+    function summaryText() {
+      const champ = winner("final");
+      const confirmed = ["加拿大", "巴西", "巴拉圭", "摩洛哥", "挪威", "法國"].join("、");
+      const scenario = scenarios[state.scenario] || scenarios.standard;
+      return `2026 世界盃淘汰賽預測：情境=${scenario.label}。已確認晉級 16 強：${confirmed}。目前 bracket 預測冠軍：${champ ? teams[champ].name : "尚未選出"}。`;
+    }
+
+    function render() {
+      pruneInvalidPicks();
+      renderBracket();
+      renderMobileMatches();
+      renderLeadCards();
+      renderChampion();
+      renderMySummary();
+      renderProbabilities();
+      renderMatchInsight();
+      renderScenarioSwitch();
+      renderModelSignals();
+      renderWeights();
+    }
+
+    document.querySelectorAll("[data-scenario]").forEach(button => {
+      button.addEventListener("click", () => {
+        state.scenario = button.dataset.scenario;
+        save();
+        render();
+      });
+    });
+
+    document.getElementById("autoPredict").addEventListener("click", autoPredict);
+    document.getElementById("clearPicks").addEventListener("click", () => {
+      state.picks = {};
+      save();
+      render();
+    });
+    document.getElementById("copySummary").addEventListener("click", async () => {
+      await navigator.clipboard.writeText(summaryText());
+      document.getElementById("copySummary").textContent = "已複製";
+      setTimeout(() => document.getElementById("copySummary").textContent = "複製摘要", 1200);
+    });
+
+    render();
+  </script>
+</body>
+</html>
