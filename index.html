@@ -85,6 +85,13 @@
       gap: 10px;
     }
 
+    .action-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
     .scenario-switch {
       display: inline-flex;
       gap: 4px;
@@ -219,6 +226,32 @@
       gap: 12px;
     }
 
+    .today-focus {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .focus-card {
+      padding: 12px;
+      border: 1px solid rgba(244,201,93,.18);
+      background: rgba(244,201,93,.07);
+      border-radius: 8px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .focus-card span {
+      color: var(--muted);
+      font-size: .72rem;
+      font-weight: 850;
+    }
+
+    .focus-card strong {
+      font-size: 1.05rem;
+      line-height: 1.15;
+    }
+
     .score-card {
       display: grid;
       gap: 12px;
@@ -351,10 +384,30 @@
     .stage {
       overflow-x: auto;
       padding: 18px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(8, 10, 13, .62);
+      border: 1px solid rgba(255,255,255,.06);
+      background: rgba(8, 10, 13, .42);
       border-radius: 8px;
-      box-shadow: var(--shadow);
+      box-shadow: 0 12px 34px rgba(0, 0, 0, .24);
+    }
+
+    .stage-title {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 12px;
+      margin-top: 2px;
+    }
+
+    .stage-title h2 {
+      margin: 0;
+      font-size: 1.02rem;
+    }
+
+    .stage-title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: .82rem;
     }
 
     .bracket {
@@ -632,16 +685,147 @@
       main { grid-template-columns: 1fr; }
       .lead-cards { grid-template-columns: 1fr 1fr; }
       .lead-card.hero-answer { grid-column: 1 / -1; }
+      .today-focus { grid-template-columns: 1fr; }
       .side { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 720px) {
+      body {
+        background:
+          radial-gradient(circle at 50% -4rem, rgba(244,201,93,.18), transparent 18rem),
+          linear-gradient(160deg, #06080b 0%, #10141b 100%);
+      }
+
+      header {
+        padding: 16px 12px 10px;
+        gap: 12px;
+      }
+
+      h1 {
+        font-size: 2.05rem;
+        line-height: .94;
+      }
+
+      .subtitle {
+        font-size: .86rem;
+        line-height: 1.42;
+      }
+
+      .status-pill {
+        max-width: 100%;
+        white-space: normal;
+        font-size: .76rem;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        width: 100%;
+      }
+
+      .scenario-switch {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .scenario-switch button {
+        min-height: 40px;
+        padding: 0 6px;
+        font-size: .8rem;
+      }
+
+      .action-group {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .action-group .primary {
+        grid-column: 1 / -1;
+      }
+
+      main {
+        padding: 0 10px 26px;
+        gap: 12px;
+      }
+
       .side { grid-template-columns: 1fr; }
       .lead-cards { grid-template-columns: 1fr; }
-      .lead-card.hero-answer { grid-column: auto; }
-      header { padding-top: 20px; }
-      .toolbar button { flex: 1 1 150px; }
+      .lead-card {
+        min-height: auto;
+        padding: 14px;
+      }
+      .lead-card.hero-answer {
+        grid-column: auto;
+        min-height: 148px;
+      }
+      .lead-cards .lead-card:not(.hero-answer) {
+        display: none;
+      }
+      .lead-value {
+        font-size: 1.55rem;
+        line-height: 1.08;
+      }
+      .score-predictions {
+        gap: 10px;
+      }
+      .score-predictions-head h2 {
+        font-size: 1.28rem;
+      }
+      .score-predictions-head p {
+        font-size: .82rem;
+      }
+      .focus-card {
+        padding: 11px 12px;
+      }
+      .focus-card strong {
+        font-size: 1.08rem;
+      }
+      .score-card {
+        padding: 16px;
+        gap: 14px;
+        border-color: rgba(244,201,93,.16);
+        background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.035));
+      }
+      .score-card-top {
+        font-size: .8rem;
+      }
+      .score-versus {
+        grid-template-columns: 1fr 42px 1fr;
+        gap: 8px;
+      }
+      .score-team .flag {
+        font-size: 2.6rem;
+      }
+      .score-team span:last-child {
+        font-size: 1.05rem;
+      }
+      .score-vs {
+        font-size: 1.2rem;
+      }
+      .outcome-box {
+        padding: 10px 4px;
+      }
+      .outcome-box strong {
+        font-size: 1.38rem;
+      }
+      .outcome-box span {
+        font-size: .65rem;
+      }
+      .score-pick {
+        padding: 10px 4px;
+      }
+      .score-pick strong {
+        font-size: 1.45rem;
+      }
+      .panel {
+        padding: 14px;
+      }
+      .toolbar button { min-height: 42px; }
       .stage { display: none; }
+      .stage-title { display: none; }
       .mobile-matches { display: grid; }
       .section-title { display: flex; align-items: start; flex-direction: column; }
     }
@@ -660,10 +844,12 @@
         <button type="button" data-scenario="chaos">黑馬劇本</button>
         <button type="button" data-scenario="host">地主加成</button>
       </div>
-      <button class="primary" id="autoPredict">用資料模型預測</button>
-      <button id="updateData">更新資料</button>
-      <button id="clearPicks">清除預測</button>
-      <button id="copySummary">複製摘要</button>
+      <div class="action-group">
+        <button class="primary" id="autoPredict">用資料模型預測</button>
+        <button id="updateData">更新資料</button>
+        <button id="clearPicks">清除預測</button>
+        <button id="copySummary">複製摘要</button>
+      </div>
     </div>
   </header>
 
@@ -695,13 +881,20 @@
     <section class="score-predictions" aria-label="接下來比分預測">
       <div class="score-predictions-head">
         <div>
-          <h2>接下來比分預測</h2>
-          <p>依目前情境模型推算勝和負機率，並給出首選、次選與大膽比分。</p>
+          <h2>今日比分預測</h2>
+          <p>先看今日重點，再看每場勝和負機率、首選比分、次選比分與大膽比分。</p>
         </div>
       </div>
+      <div class="today-focus" id="todayFocus"></div>
       <div class="score-grid" id="scorePredictions"></div>
     </section>
 
+    <section class="stage-title">
+      <div>
+        <h2>完整淘汰賽路徑</h2>
+        <p>想看冠軍一路怎麼走，再往下操作 bracket。</p>
+      </div>
+    </section>
     <section class="stage" aria-label="World Cup bracket">
       <div class="bracket" id="bracket"></div>
     </section>
@@ -1251,19 +1444,44 @@
         .slice(0, 4);
     }
 
-    function renderScorePredictions() {
-      const root = document.getElementById("scorePredictions");
-      if (!root) return;
-      const items = upcomingScoreMatches();
-      if (!items.length) {
-        root.innerHTML = `<article class="score-card"><div class="note">目前沒有可預測的未賽對戰。完成前一輪預測後，下一輪比分會自動出現。</div></article>`;
-        return;
-      }
-      root.innerHTML = items.map(({ round, matchId, pair }) => {
+    function scorePredictionItems() {
+      return upcomingScoreMatches().map(({ round, matchId, pair }) => {
         const [a, b] = pair;
         const match = matches[matchId];
         const outcome = outcomeProbabilities(a, b);
         const scores = scorePredictionsFor(a, b);
+        const maxWin = Math.max(outcome.winA, outcome.winB);
+        const favorite = outcome.winA >= outcome.winB ? a : b;
+        return { round, matchId, match, a, b, outcome, scores, maxWin, favorite, closeness: Math.abs(outcome.winA - outcome.winB) };
+      });
+    }
+
+    function renderTodayFocus(items) {
+      const root = document.getElementById("todayFocus");
+      if (!root) return;
+      if (!items.length) {
+        root.innerHTML = "";
+        return;
+      }
+      const safest = [...items].sort((a, b) => b.maxWin - a.maxWin)[0];
+      const closest = [...items].sort((a, b) => a.closeness - b.closeness)[0];
+      const bold = [...items].sort((a, b) => (b.scores.bold.ga + b.scores.bold.gb) - (a.scores.bold.ga + a.scores.bold.gb))[0];
+      root.innerHTML = `
+        <article class="focus-card"><span>今日最穩</span><strong>${teams[safest.favorite].flag} ${teams[safest.favorite].name} 勝</strong></article>
+        <article class="focus-card"><span>最接近五五波</span><strong>${teams[closest.a].name} vs ${teams[closest.b].name}</strong></article>
+        <article class="focus-card"><span>大膽比分</span><strong>${teams[bold.a].name} ${scoreLabel(bold.scores.bold)} ${teams[bold.b].name}</strong></article>`;
+    }
+
+    function renderScorePredictions() {
+      const root = document.getElementById("scorePredictions");
+      if (!root) return;
+      const items = scorePredictionItems();
+      renderTodayFocus(items);
+      if (!items.length) {
+        root.innerHTML = `<article class="score-card"><div class="note">目前沒有可預測的未賽對戰。完成前一輪預測後，下一輪比分會自動出現。</div></article>`;
+        return;
+      }
+      root.innerHTML = items.map(({ round, matchId, match, a, b, outcome, scores }) => {
         return `
           <article class="score-card">
             <div class="score-card-top"><span>${round.label} · ${match.code}</span><span>${match.time}</span></div>
