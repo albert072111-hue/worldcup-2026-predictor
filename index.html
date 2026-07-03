@@ -788,37 +788,58 @@
         gap: 14px;
         border-color: rgba(244,201,93,.16);
         background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.035));
+        overflow: hidden;
       }
       .score-card-top {
         font-size: .8rem;
+        flex-wrap: wrap;
       }
       .score-versus {
-        grid-template-columns: 1fr 42px 1fr;
-        gap: 8px;
+        grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr);
+        gap: 6px;
       }
       .score-team .flag {
-        font-size: 2.6rem;
+        font-size: 2.25rem;
       }
       .score-team span:last-child {
-        font-size: 1.05rem;
+        font-size: .98rem;
+        line-height: 1.12;
+        white-space: normal;
+        overflow-wrap: anywhere;
       }
       .score-vs {
-        font-size: 1.2rem;
+        font-size: 1.05rem;
+      }
+      .outcome-grid {
+        grid-template-columns: 1fr;
       }
       .outcome-box {
-        padding: 10px 4px;
+        padding: 10px 12px;
+        display: grid;
+        grid-template-columns: 68px 1fr;
+        align-items: center;
+        text-align: left;
       }
       .outcome-box strong {
-        font-size: 1.38rem;
+        font-size: 1.26rem;
       }
       .outcome-box span {
-        font-size: .65rem;
+        font-size: .78rem;
+        text-align: right;
+      }
+      .score-picks {
+        grid-template-columns: 1fr;
       }
       .score-pick {
-        padding: 10px 4px;
+        padding: 10px 12px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        text-align: left;
       }
       .score-pick strong {
-        font-size: 1.45rem;
+        margin-top: 0;
+        font-size: 1.36rem;
       }
       .panel {
         padding: 14px;
@@ -1689,5 +1710,6 @@
   </script>
 </body>
 </html>
+
 
 
