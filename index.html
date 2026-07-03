@@ -709,6 +709,7 @@
       .subtitle {
         font-size: .86rem;
         line-height: 1.42;
+        display: none;
       }
 
       .status-pill {
@@ -738,7 +739,7 @@
 
       .action-group {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 8px;
       }
 
@@ -768,7 +769,7 @@
       }
       .lead-card.hero-answer {
         grid-column: auto;
-        min-height: 148px;
+        min-height: 128px;
       }
       .lead-cards .lead-card:not(.hero-answer) {
         display: none;
@@ -785,6 +786,7 @@
       }
       .score-predictions-head p {
         font-size: .82rem;
+        line-height: 1.45;
       }
       .focus-card {
         padding: 11px 12px;
@@ -798,6 +800,7 @@
         border-color: rgba(244,201,93,.16);
         background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.035));
         overflow: hidden;
+        box-shadow: 0 14px 38px rgba(0,0,0,.32);
       }
       .score-card-top {
         font-size: .8rem;
@@ -825,7 +828,7 @@
       .outcome-box {
         padding: 10px 12px;
         display: grid;
-        grid-template-columns: 68px 1fr;
+        grid-template-columns: 76px 1fr;
         align-items: center;
         text-align: left;
       }
@@ -852,6 +855,12 @@
       }
       .panel {
         padding: 14px;
+      }
+      .mobile-card {
+        padding: 12px;
+      }
+      .mobile-card .team {
+        min-height: 42px;
       }
       .toolbar button { min-height: 42px; }
       .stage { display: none; }
@@ -1243,7 +1252,11 @@
     function renderMobileMatches() {
       const root = document.getElementById("mobileMatches");
       root.innerHTML = "";
-      rounds.slice(0, 2).flatMap(round => round.matches.map(matchId => ({ round, matchId }))).forEach(({ round, matchId }) => {
+      const mobileItems = rounds.slice(0, 2)
+        .flatMap(round => round.matches.map(matchId => ({ round, matchId })))
+        .filter(({ matchId }) => !matches[matchId].actual)
+        .slice(0, 8);
+      mobileItems.forEach(({ round, matchId }) => {
         const match = matches[matchId];
         const pair = participants(matchId);
         const node = document.createElement("article");
@@ -1259,6 +1272,9 @@
         node.appendChild(teamButton(matchId, pair[1]));
         root.appendChild(node);
       });
+      if (!mobileItems.length) {
+        root.innerHTML = `<article class="mobile-card"><div class="note">目前 32 強已完成，下一輪對戰會隨著預測或資料更新出現。</div></article>`;
+      }
     }
 
     function predictWinner(a, b) {
