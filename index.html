@@ -530,7 +530,7 @@
 <body>
   <header>
     <div>
-      <span class="status-pill"><span class="status-dot"></span>戰況更新：2026-07-01 依公開報導整理</span>
+      <span class="status-pill"><span class="status-dot"></span><span id="updateStatusText">戰況更新：2026-07-03 依公開報導整理</span></span>
       <h1>Knockout<br>Predictor</h1>
       <p class="subtitle">把靜態賽程圖改成可操作的冠軍預測器：已完成比賽自動鎖定，未開賽比賽顯示模型勝率，也能用保守、爆冷、主場三種情境推演到冠軍。</p>
     </div>
@@ -541,6 +541,7 @@
         <button type="button" data-scenario="host">地主加成</button>
       </div>
       <button class="primary" id="autoPredict">用資料模型預測</button>
+      <button id="updateData">更新資料</button>
       <button id="clearPicks">清除預測</button>
       <button id="copySummary">複製摘要</button>
     </div>
@@ -613,7 +614,7 @@
       <details class="panel">
         <summary>最新賽果與資料來源</summary>
         <h2>已確認賽果</h2>
-        <ul class="timeline">
+        <ul class="timeline" id="timelineList">
           <li>加拿大 1-0 南非，晉級 16 強。</li>
           <li>巴西 2-1 日本，晉級 16 強。</li>
           <li>巴拉圭 1-1 德國，PK 4-3 晉級。</li>
@@ -643,21 +644,21 @@
       CAN:{name:"加拿大", flag:"🇨🇦", rating:73, signal:"晉級後上修，但國際模型仍非奪冠熱門"},
       NED:{name:"荷蘭", flag:"🇳🇱", rating:86, signal:"賽前模型強，但已被摩洛哥淘汰"},
       MAR:{name:"摩洛哥", flag:"🇲🇦", rating:78, signal:"防守與淘汰賽韌性加分，爆冷晉級後上修"},
-      POR:{name:"葡萄牙", flag:"🇵🇹", rating:84, signal:"賠率與 Elo 高於克羅埃西亞，模型看好晉級"},
+      POR:{name:"葡萄牙", flag:"🇵🇹", rating:85, signal:"絕殺克羅埃西亞晉級後小幅上修；模型看好但路徑難度高。"},
       CRO:{name:"克羅埃西亞", flag:"🇭🇷", rating:76, signal:"淘汰賽經驗強，但整體賠率低於葡萄牙"},
-      ESP:{name:"西班牙", flag:"🇪🇸", rating:91, signal:"Opta 第 3，賠率市場前段班"},
+      ESP:{name:"西班牙", flag:"🇪🇸", rating:92, signal:"3-0 擊敗奧地利後上修；仍是冠軍模型第一梯隊。"},
       AUT:{name:"奧地利", flag:"🇦🇹", rating:75, signal:"歐洲穩定型球隊，模型仍視為下位挑戰者"},
-      USA:{name:"美國", flag:"🇺🇸", rating:74, signal:"主場與籤表加分，但 Elo/賠率未到第一梯隊"},
+      USA:{name:"美國", flag:"🇺🇸", rating:77, signal:"擊敗波士尼亞後上修；地主加成模式下更有黑馬價值。"},
       BIH:{name:"波士尼亞", flag:"🇧🇦", rating:68, signal:"模型長線評估偏低"},
-      BEL:{name:"比利時", flag:"🇧🇪", rating:80, signal:"仍有個人能力，但國際模型評價低於巔峰期"},
+      BEL:{name:"比利時", flag:"🇧🇪", rating:81, signal:"延長賽擊敗塞內加爾後小幅上修，但長線仍低於頂級熱門。"},
       SEN:{name:"塞內加爾", flag:"🇸🇳", rating:75, signal:"非洲強隊，爆冷機率不低但冠軍路徑偏難"},
       BRA:{name:"巴西", flag:"🇧🇷", rating:88, signal:"賠率與 Elo 前段，已晉級後維持熱門"},
       JPN:{name:"日本", flag:"🇯🇵", rating:79, signal:"亞洲最高梯隊之一，已被巴西淘汰"},
       CIV:{name:"象牙海岸", flag:"🇨🇮", rating:73, signal:"身體對抗強，已被挪威淘汰"},
       NOR:{name:"挪威", flag:"🇳🇴", rating:81, signal:"晉級後上修，進攻端個人能力讓模型加分"},
-      MEX:{name:"墨西哥", flag:"🇲🇽", rating:77, signal:"主場區域優勢，但長線冠軍市場非熱門"},
+      MEX:{name:"墨西哥", flag:"🇲🇽", rating:79, signal:"擊敗厄瓜多後上修；主場區域優勢與籤表路徑讓模型加分。"},
       ECU:{name:"厄瓜多", flag:"🇪🇨", rating:76, signal:"防守與轉換強，模型評價接近墨西哥"},
-      ENG:{name:"英格蘭", flag:"🏴", rating:89, signal:"Opta 第 4，賠率長期前段班"},
+      ENG:{name:"英格蘭", flag:"🏴", rating:90, signal:"晉級後維持第一梯隊；Opta、賠率與 Elo 共識仍高。"},
       COD:{name:"剛果民主共和國", flag:"🇨🇩", rating:65, signal:"黑馬籤位，但資料模型分數偏低"},
       ARG:{name:"阿根廷", flag:"🇦🇷", rating:94, signal:"Opta 第 2，賠率與 Elo 皆在冠軍熱門"},
       CPV:{name:"維德角", flag:"🇨🇻", rating:64, signal:"本屆黑馬，但模型長線冠軍機率低"},
@@ -683,14 +684,14 @@
       m77:{code:"M77", time:"已完成", teams:["FRA","SWE"], score:{FRA:"3",SWE:"0"}, actual:"FRA"},
       m73:{code:"M73", time:"已完成", teams:["RSA","CAN"], score:{RSA:"0",CAN:"1"}, actual:"CAN"},
       m75:{code:"M75", time:"已完成", teams:["NED","MAR"], score:{NED:"1",MAR:"1"}, note:"PK 2-3", actual:"MAR"},
-      m83:{code:"M83", time:"7/2 07:00 TPE", teams:["POR","CRO"]},
-      m84:{code:"M84", time:"7/2 03:00 TPE", teams:["ESP","AUT"]},
-      m81:{code:"M81", time:"7/2 08:00 TPE", teams:["USA","BIH"]},
-      m82:{code:"M82", time:"7/2 04:00 TPE", teams:["BEL","SEN"]},
+      m83:{code:"M83", time:"已完成", teams:["POR","CRO"], score:{POR:"2",CRO:"1"}, actual:"POR"},
+      m84:{code:"M84", time:"已完成", teams:["ESP","AUT"], score:{ESP:"3",AUT:"0"}, actual:"ESP"},
+      m81:{code:"M81", time:"已完成", teams:["USA","BIH"], score:{USA:"2",BIH:"0"}, actual:"USA"},
+      m82:{code:"M82", time:"已完成", teams:["BEL","SEN"], score:{BEL:"3",SEN:"2"}, note:"AET", actual:"BEL"},
       m76:{code:"M76", time:"已完成", teams:["BRA","JPN"], score:{BRA:"2",JPN:"1"}, actual:"BRA"},
       m78:{code:"M78", time:"已完成", teams:["CIV","NOR"], score:{CIV:"1",NOR:"2"}, actual:"NOR"},
-      m79:{code:"M79", time:"7/1 09:00 TPE", teams:["MEX","ECU"]},
-      m80:{code:"M80", time:"7/2 00:00 TPE", teams:["ENG","COD"]},
+      m79:{code:"M79", time:"已完成", teams:["MEX","ECU"], score:{MEX:"2",ECU:"0"}, actual:"MEX"},
+      m80:{code:"M80", time:"已完成", teams:["ENG","COD"], score:{ENG:"2",COD:"1"}, actual:"ENG"},
       m86:{code:"M86", time:"7/4 06:00 TPE", teams:["ARG","CPV"]},
       m88:{code:"M88", time:"7/4 02:00 TPE", teams:["AUS","EGY"]},
       m85:{code:"M85", time:"7/3 11:00 TPE", teams:["SUI","ALG"]},
@@ -710,6 +711,25 @@
       sf1:{code:"SF1", time:"4 強", from:["qf1","qf2"]},
       sf2:{code:"SF2", time:"4 強", from:["qf3","qf4"]},
       final:{code:"FINAL", time:"冠軍戰", from:["sf1","sf2"]}
+    };
+
+    const appData = {
+      updatedAt: "2026-07-03",
+      updatedLabel: "戰況更新：2026-07-03 依公開報導整理",
+      confirmedResults: [
+        "加拿大 1-0 南非，晉級 16 強。",
+        "巴西 2-1 日本，晉級 16 強。",
+        "巴拉圭 1-1 德國，PK 4-3 晉級。",
+        "摩洛哥 1-1 荷蘭，PK 3-2 晉級。",
+        "挪威 2-1 象牙海岸，晉級 16 強。",
+        "法國 3-0 瑞典，晉級 16 強。",
+        "墨西哥 2-0 厄瓜多，晉級 16 強。",
+        "英格蘭 2-1 剛果民主共和國，晉級 16 強。",
+        "比利時 3-2 塞內加爾，延長賽晉級 16 強。",
+        "美國 2-0 波士尼亞，晉級 16 強。",
+        "西班牙 3-0 奧地利，晉級 16 強。",
+        "葡萄牙 2-1 克羅埃西亞，晉級 16 強。"
+      ]
     };
 
     const scenarios = {
@@ -736,6 +756,47 @@
       localStorage.setItem("wc26-picks", JSON.stringify(state.picks));
       localStorage.setItem("wc26-scenario", state.scenario);
       localStorage.setItem("wc26-selected-match", state.selectedMatch);
+    }
+
+    async function updateDataFromJson() {
+      const button = document.getElementById("updateData");
+      const status = document.getElementById("updateStatusText");
+      button.disabled = true;
+      button.textContent = "更新中";
+      status.textContent = "正在讀取最新資料...";
+      try {
+        const response = await fetch(`worldcup-2026-data.json?v=${Date.now()}`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        applyDataUpdate(data);
+        pruneInvalidPicks();
+        save();
+        render();
+        status.textContent = appData.updatedLabel;
+        button.textContent = "已更新";
+        setTimeout(() => button.textContent = "更新資料", 1400);
+      } catch (error) {
+        status.textContent = location.protocol === "file:"
+          ? "本機檔案預覽無法讀取 JSON；發布到 GitHub Pages 後可用。"
+          : "更新失敗，請確認 worldcup-2026-data.json 已上傳。";
+        button.textContent = "更新資料";
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    function applyDataUpdate(data) {
+      if (data.updatedAt) appData.updatedAt = data.updatedAt;
+      if (data.updatedLabel) appData.updatedLabel = data.updatedLabel;
+      else appData.updatedLabel = `戰況更新：${appData.updatedAt} 依資料檔整理`;
+      if (Array.isArray(data.confirmedResults)) appData.confirmedResults = data.confirmedResults;
+
+      Object.entries(data.teams || {}).forEach(([id, patch]) => {
+        if (teams[id]) Object.assign(teams[id], patch);
+      });
+      Object.entries(data.matches || {}).forEach(([id, patch]) => {
+        if (matches[id]) Object.assign(matches[id], patch);
+      });
     }
 
     function entrant(matchId, slot) {
@@ -770,6 +831,10 @@
 
     function pruneInvalidPicks() {
       Object.keys(state.picks).forEach(matchId => {
+        if (matches[matchId]?.actual) {
+          delete state.picks[matchId];
+          return;
+        }
         if (!participants(matchId).includes(state.picks[matchId])) delete state.picks[matchId];
       });
     }
@@ -1124,9 +1189,15 @@
         </li>`).join("");
     }
 
+    function renderTimeline() {
+      document.getElementById("updateStatusText").textContent = appData.updatedLabel;
+      const list = document.getElementById("timelineList");
+      list.innerHTML = appData.confirmedResults.map(item => `<li>${item}</li>`).join("");
+    }
+
     function summaryText() {
       const champ = winner("final");
-      const confirmed = ["加拿大", "巴西", "巴拉圭", "摩洛哥", "挪威", "法國"].join("、");
+      const confirmed = appData.confirmedResults.map(item => item.split(" ")[0]).join("、");
       const scenario = scenarios[state.scenario] || scenarios.standard;
       return `2026 世界盃淘汰賽預測：情境=${scenario.label}。已確認晉級 16 強：${confirmed}。目前 bracket 預測冠軍：${champ ? teams[champ].name : "尚未選出"}。`;
     }
@@ -1143,6 +1214,7 @@
       renderScenarioSwitch();
       renderModelSignals();
       renderWeights();
+      renderTimeline();
     }
 
     document.querySelectorAll("[data-scenario]").forEach(button => {
@@ -1154,6 +1226,7 @@
     });
 
     document.getElementById("autoPredict").addEventListener("click", autoPredict);
+    document.getElementById("updateData").addEventListener("click", updateDataFromJson);
     document.getElementById("clearPicks").addEventListener("click", () => {
       state.picks = {};
       save();
