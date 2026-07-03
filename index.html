@@ -1056,7 +1056,7 @@
       m80:{code:"M80", time:"已完成", teams:["ENG","COD"], score:{ENG:"2",COD:"1"}, actual:"ENG"},
       m86:{code:"M86", time:"7/4 06:00 TPE", teams:["ARG","CPV"]},
       m88:{code:"M88", time:"7/4 02:00 TPE", teams:["AUS","EGY"]},
-      m85:{code:"M85", time:"7/3 11:00 TPE", teams:["SUI","ALG"]},
+      m85:{code:"M85", time:"已完成", teams:["SUI","ALG"], score:{SUI:"2",ALG:"0"}, actual:"SUI"},
       m87:{code:"M87", time:"7/4 09:30 TPE", teams:["COL","GHA"]},
       m89:{code:"M89", time:"16 強", from:["m74","m77"]},
       m90:{code:"M90", time:"16 強", from:["m73","m75"]},
@@ -1077,7 +1077,8 @@
 
     const appData = {
       updatedAt: "2026-07-03",
-      updatedLabel: "戰況更新：2026-07-03 依公開報導整理",
+      updatedLabel: "戰況更新：2026-07-03，已含瑞士 2-0 阿爾及利亞",
+      nextUpdateLabel: "下次建議更新：7/4 04:15 TPE",
       confirmedResults: [
         "加拿大 1-0 南非，晉級 16 強。",
         "巴西 2-1 日本，晉級 16 強。",
@@ -1090,7 +1091,8 @@
         "比利時 3-2 塞內加爾，延長賽晉級 16 強。",
         "美國 2-0 波士尼亞，晉級 16 強。",
         "西班牙 3-0 奧地利，晉級 16 強。",
-        "葡萄牙 2-1 克羅埃西亞，晉級 16 強。"
+        "葡萄牙 2-1 克羅埃西亞，晉級 16 強。",
+        "瑞士 2-0 阿爾及利亞，晉級 16 強。"
       ]
     };
 
@@ -1151,6 +1153,7 @@
       if (data.updatedAt) appData.updatedAt = data.updatedAt;
       if (data.updatedLabel) appData.updatedLabel = data.updatedLabel;
       else appData.updatedLabel = `戰況更新：${appData.updatedAt} 依資料檔整理`;
+      if (data.nextUpdateLabel) appData.nextUpdateLabel = data.nextUpdateLabel;
       if (Array.isArray(data.confirmedResults)) appData.confirmedResults = data.confirmedResults;
 
       Object.entries(data.teams || {}).forEach(([id, patch]) => {
@@ -1682,7 +1685,7 @@
     }
 
     function renderTimeline() {
-      document.getElementById("updateStatusText").textContent = appData.updatedLabel;
+      document.getElementById("updateStatusText").textContent = `${appData.updatedLabel}｜${appData.nextUpdateLabel || "下次建議更新：待定"}`;
       const list = document.getElementById("timelineList");
       list.innerHTML = appData.confirmedResults.map(item => `<li>${item}</li>`).join("");
     }
