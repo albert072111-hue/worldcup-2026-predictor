@@ -875,13 +875,13 @@
     <div>
       <span class="status-pill"><span class="status-dot"></span><span id="updateStatusText">戰況更新：2026-07-03 依公開報導整理</span></span>
       <h1>Knockout<br>Predictor</h1>
-      <p class="subtitle">把靜態賽程圖改成可操作的冠軍預測器：已完成比賽自動鎖定，未開賽比賽顯示模型勝率，也能用保守、爆冷、主場三種情境推演到冠軍。</p>
+      <p class="subtitle">把靜態賽程圖改成可操作的冠軍預測器：已完成比賽自動鎖定，未開賽比賽顯示模型勝率，也能用保守、爆冷、狀態加權三種情境推演到冠軍。</p>
     </div>
     <div class="toolbar">
       <div class="scenario-switch" aria-label="預測情境">
         <button type="button" data-scenario="standard">穩穩看</button>
         <button type="button" data-scenario="chaos">黑馬劇本</button>
-        <button type="button" data-scenario="host">地主加成</button>
+        <button type="button" data-scenario="host">狀態加權</button>
       </div>
       <div class="action-group">
         <button class="primary" id="autoPredict">用資料模型預測</button>
@@ -1010,7 +1010,7 @@
       CRO:{name:"克羅埃西亞", flag:"🇭🇷", rating:76, signal:"淘汰賽經驗強，但整體賠率低於葡萄牙"},
       ESP:{name:"西班牙", flag:"🇪🇸", rating:92, signal:"3-0 擊敗奧地利後上修；仍是冠軍模型第一梯隊。"},
       AUT:{name:"奧地利", flag:"🇦🇹", rating:75, signal:"歐洲穩定型球隊，模型仍視為下位挑戰者"},
-      USA:{name:"美國", flag:"🇺🇸", rating:77, signal:"擊敗波士尼亞後上修；地主加成模式下更有黑馬價值。"},
+      USA:{name:"美國", flag:"🇺🇸", rating:77, signal:"擊敗波士尼亞後曾上修；目前已淘汰，後續模型不再加權。"},
       BIH:{name:"波士尼亞", flag:"🇧🇦", rating:68, signal:"模型長線評估偏低"},
       BEL:{name:"比利時", flag:"🇧🇪", rating:81, signal:"延長賽擊敗塞內加爾後小幅上修，但長線仍低於頂級熱門。"},
       SEN:{name:"塞內加爾", flag:"🇸🇳", rating:75, signal:"非洲強隊，爆冷機率不低但冠軍路徑偏難"},
@@ -1018,7 +1018,7 @@
       JPN:{name:"日本", flag:"🇯🇵", rating:79, signal:"亞洲最高梯隊之一，已被巴西淘汰"},
       CIV:{name:"象牙海岸", flag:"🇨🇮", rating:73, signal:"身體對抗強，已被挪威淘汰"},
       NOR:{name:"挪威", flag:"🇳🇴", rating:81, signal:"晉級後上修，進攻端個人能力讓模型加分"},
-      MEX:{name:"墨西哥", flag:"🇲🇽", rating:79, signal:"擊敗厄瓜多後上修；主場區域優勢與籤表路徑讓模型加分。"},
+      MEX:{name:"墨西哥", flag:"🇲🇽", rating:79, signal:"擊敗厄瓜多後曾上修；目前已淘汰，後續模型不再加權。"},
       ECU:{name:"厄瓜多", flag:"🇪🇨", rating:76, signal:"防守與轉換強，模型評價接近墨西哥"},
       ENG:{name:"英格蘭", flag:"🏴", rating:90, signal:"晉級後維持第一梯隊；Opta、賠率與 Elo 共識仍高。"},
       COD:{name:"剛果民主共和國", flag:"🇨🇩", rating:65, signal:"黑馬籤位，但資料模型分數偏低"},
@@ -1098,9 +1098,9 @@
     const scenarios = {
       standard: { label:"穩穩看", spread:18, favoriteTax:0, underdogLift:0, hostBoost:0, note:"比較相信強隊、賠率和 Elo 共識。" },
       chaos: { label:"黑馬劇本", spread:30, favoriteTax:3, underdogLift:3, hostBoost:0, note:"把爆冷機率拉高，弱隊不會太快被模型放棄。" },
-      host: { label:"地主加成", spread:20, favoriteTax:0, underdogLift:0, hostBoost:5, note:"美國、墨西哥、加拿大多一點主場與旅程優勢。" }
+      host: { label:"狀態加權", spread:20, favoriteTax:0, underdogLift:0, hostBoost:4, note:"近期晉級氣勢、賽程負荷與淘汰賽狀態較好的隊伍小幅加權。" }
     };
-    const hostTeams = new Set(["USA", "MEX", "CAN"]);
+    const hostTeams = new Set(["FRA", "ESP", "ARG", "ENG", "NOR", "BEL", "SUI", "MAR"]);
     const modelWeights = [
       { label:"AI / 超級電腦", value:35, note:"用來捕捉小組賽後的整體冠軍機率與路徑強弱。" },
       { label:"冠軍賠率市場", value:30, note:"反映市場對陣容、傷兵、人氣與路徑的綜合定價。" },
@@ -1737,6 +1737,8 @@
   </script>
 </body>
 </html>
+
+
 
 
 
