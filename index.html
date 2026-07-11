@@ -873,7 +873,7 @@
 <body>
   <header>
     <div>
-      <span class="status-pill"><span class="status-dot"></span><span id="updateStatusText">戰況更新：2026-07-03 依公開報導整理</span></span>
+      <span class="status-pill"><span class="status-dot"></span><span id="updateStatusText">戰況更新：2026-07-11 11:50 TPE，已含西班牙 2-1 比利時｜下次建議更新：7/12 07:15 TPE（挪威 vs 英格蘭賽後）</span></span>
       <h1>Knockout<br>Predictor</h1>
       <p class="subtitle">把靜態賽程圖改成可操作的冠軍預測器：已完成比賽自動鎖定，未開賽比賽顯示模型勝率，也能用保守、爆冷、狀態加權三種情境推演到冠軍。</p>
     </div>
@@ -1008,11 +1008,11 @@
       MAR:{name:"摩洛哥", flag:"🇲🇦", rating:78, signal:"防守與淘汰賽韌性加分，爆冷晉級後上修"},
       POR:{name:"葡萄牙", flag:"🇵🇹", rating:85, signal:"絕殺克羅埃西亞晉級後小幅上修；模型看好但路徑難度高。"},
       CRO:{name:"克羅埃西亞", flag:"🇭🇷", rating:76, signal:"淘汰賽經驗強，但整體賠率低於葡萄牙"},
-      ESP:{name:"西班牙", flag:"🇪🇸", rating:92, signal:"3-0 擊敗奧地利後上修；仍是冠軍模型第一梯隊。"},
+      ESP:{name:"西班牙", flag:"🇪🇸", rating:96, signal:"2-1 淘汰比利時後晉級 4 強，將對法國；控球與關鍵替補火力讓模型再上修。"},
       AUT:{name:"奧地利", flag:"🇦🇹", rating:75, signal:"歐洲穩定型球隊，模型仍視為下位挑戰者"},
       USA:{name:"美國", flag:"🇺🇸", rating:77, signal:"擊敗波士尼亞後曾上修；目前已淘汰，後續模型不再加權。"},
       BIH:{name:"波士尼亞", flag:"🇧🇦", rating:68, signal:"模型長線評估偏低"},
-      BEL:{name:"比利時", flag:"🇧🇪", rating:81, signal:"延長賽擊敗塞內加爾後小幅上修，但長線仍低於頂級熱門。"},
+      BEL:{name:"比利時", flag:"🇧🇪", rating:78, signal:"8 強 1-2 不敵西班牙出局；進攻一度扳平，但末段防守與門將傷退成為轉折。"},
       SEN:{name:"塞內加爾", flag:"🇸🇳", rating:75, signal:"非洲強隊，爆冷機率不低但冠軍路徑偏難"},
       BRA:{name:"巴西", flag:"🇧🇷", rating:88, signal:"賠率與 Elo 前段，已晉級後維持熱門"},
       JPN:{name:"日本", flag:"🇯🇵", rating:79, signal:"亞洲最高梯隊之一，已被巴西淘汰"},
@@ -1067,7 +1067,7 @@
       m95:{code:"M95", time:"已完成", from:["m86","m88"], score:{ARG:"3",EGY:"2"}, actual:"ARG"},
       m96:{code:"M96", time:"已完成", from:["m85","m87"], score:{SUI:"0",COL:"0"}, note:"PK 4-3", actual:"SUI"},
       qf1:{code:"QF1", time:"已完成", from:["m89","m90"], score:{FRA:"2",MAR:"0"}, actual:"FRA"},
-      qf2:{code:"QF2", time:"7/11 03:00 TPE", from:["m93","m94"]},
+      qf2:{code:"QF2", time:"已完成", from:["m93","m94"], score:{ESP:"2",BEL:"1"}, actual:"ESP"},
       qf3:{code:"QF3", time:"7/12 05:00 TPE", from:["m91","m92"]},
       qf4:{code:"QF4", time:"7/12 09:00 TPE", from:["m95","m96"]},
       sf1:{code:"SF1", time:"4 強", from:["qf1","qf2"]},
@@ -1076,11 +1076,12 @@
     };
 
     const appData = {
-      updatedAt: "2026-07-10",
-      updatedLabel: "戰況更新：2026-07-10，已含法國 2-0 摩洛哥",
-      nextUpdateLabel: "下次建議更新：7/11 05:15 TPE",
+      updatedAt: "2026-07-11",
+      updatedLabel: "戰況更新：2026-07-11 11:50 TPE，已含西班牙 2-1 比利時",
+      nextUpdateLabel: "下次建議更新：7/12 07:15 TPE（挪威 vs 英格蘭賽後）",
       confirmedResults: [
         "8 強結果：法國 2-0 摩洛哥，晉級 4 強。",
+        "8 強結果：西班牙 2-1 比利時，晉級 4 強，將對法國。",
         "16 強結果：法國 1-0 巴拉圭。",
         "16 強結果：摩洛哥 3-0 加拿大。",
         "16 強結果：挪威 2-1 巴西。",
@@ -1089,7 +1090,6 @@
         "16 強結果：比利時 4-1 美國。",
         "16 強結果：阿根廷 3-2 埃及。",
         "16 強結果：瑞士 0-0 哥倫比亞，PK 4-3 晉級。",
-        "8 強待賽：西班牙 vs 比利時。",
         "8 強待賽：挪威 vs 英格蘭。",
         "8 強待賽：阿根廷 vs 瑞士。"
       ]
