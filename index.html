@@ -873,7 +873,7 @@
 <body>
   <header>
     <div>
-      <span class="status-pill"><span class="status-dot"></span><span id="updateStatusText">戰況更新：2026-07-11 11:50 TPE，已含西班牙 2-1 比利時｜下次建議更新：7/12 07:15 TPE（挪威 vs 英格蘭賽後）</span></span>
+      <span class="status-pill"><span class="status-dot"></span><span id="updateStatusText">戰況更新：2026-07-12，四強確定：法國 vs 西班牙、英格蘭 vs 阿根廷｜下次建議更新：7/15 05:15 TPE（法國 vs 西班牙賽後）</span></span>
       <h1>Knockout<br>Predictor</h1>
       <p class="subtitle">把靜態賽程圖改成可操作的冠軍預測器：已完成比賽自動鎖定，未開賽比賽顯示模型勝率，也能用保守、爆冷、狀態加權三種情境推演到冠軍。</p>
     </div>
@@ -1017,16 +1017,16 @@
       BRA:{name:"巴西", flag:"🇧🇷", rating:88, signal:"賠率與 Elo 前段，已晉級後維持熱門"},
       JPN:{name:"日本", flag:"🇯🇵", rating:79, signal:"亞洲最高梯隊之一，已被巴西淘汰"},
       CIV:{name:"象牙海岸", flag:"🇨🇮", rating:73, signal:"身體對抗強，已被挪威淘汰"},
-      NOR:{name:"挪威", flag:"🇳🇴", rating:81, signal:"晉級後上修，進攻端個人能力讓模型加分"},
+      NOR:{name:"挪威", flag:"🇳🇴", rating:80, signal:"8 強延長賽 1-2 不敵英格蘭出局；Haaland 被限制，但本屆爆冷淘汰巴西仍是亮點。"},
       MEX:{name:"墨西哥", flag:"🇲🇽", rating:79, signal:"擊敗厄瓜多後曾上修；目前已淘汰，後續模型不再加權。"},
       ECU:{name:"厄瓜多", flag:"🇪🇨", rating:76, signal:"防守與轉換強，模型評價接近墨西哥"},
-      ENG:{name:"英格蘭", flag:"🏴", rating:90, signal:"晉級後維持第一梯隊；Opta、賠率與 Elo 共識仍高。"},
+      ENG:{name:"英格蘭", flag:"🏴", rating:92, signal:"2-1 延長賽逆轉挪威晉級 4 強，Bellingham 梅開二度；韌性上修，但比賽內容仍有波動。"},
       COD:{name:"剛果民主共和國", flag:"🇨🇩", rating:65, signal:"黑馬籤位，但資料模型分數偏低"},
-      ARG:{name:"阿根廷", flag:"🇦🇷", rating:94, signal:"Opta 第 2，賠率與 Elo 皆在冠軍熱門"},
+      ARG:{name:"阿根廷", flag:"🇦🇷", rating:95, signal:"3-1 延長賽淘汰瑞士晉級 4 強，深度與關鍵球能力再度展現，將對英格蘭。"},
       CPV:{name:"維德角", flag:"🇨🇻", rating:64, signal:"本屆黑馬，但模型長線冠軍機率低"},
       AUS:{name:"澳洲", flag:"🇦🇺", rating:70, signal:"穩定但上限評價低於埃及"},
       EGY:{name:"埃及", flag:"🇪🇬", rating:76, signal:"個人能力與非洲賽事經驗加分"},
-      SUI:{name:"瑞士", flag:"🇨🇭", rating:78, signal:"穩定守序，模型略看好勝過阿爾及利亞"},
+      SUI:{name:"瑞士", flag:"🇨🇭", rating:80, signal:"8 強延長賽 1-3 不敵阿根廷出局；防守紀律一度拖住比賽，但紅牌後被拉開。"},
       ALG:{name:"阿爾及利亞", flag:"🇩🇿", rating:74, signal:"進攻端有爆點，但整體共識分稍低"},
       COL:{name:"哥倫比亞", flag:"🇨🇴", rating:82, signal:"南美強隊，Elo/power ranking 位居第二梯隊"},
       GHA:{name:"迦納", flag:"🇬🇭", rating:73, signal:"淘汰賽黑馬可能性高於長線冠軍機率"}
@@ -1068,20 +1068,22 @@
       m96:{code:"M96", time:"已完成", from:["m85","m87"], score:{SUI:"0",COL:"0"}, note:"PK 4-3", actual:"SUI"},
       qf1:{code:"QF1", time:"已完成", from:["m89","m90"], score:{FRA:"2",MAR:"0"}, actual:"FRA"},
       qf2:{code:"QF2", time:"已完成", from:["m93","m94"], score:{ESP:"2",BEL:"1"}, actual:"ESP"},
-      qf3:{code:"QF3", time:"7/12 05:00 TPE", from:["m91","m92"]},
-      qf4:{code:"QF4", time:"7/12 09:00 TPE", from:["m95","m96"]},
+      qf3:{code:"QF3", time:"已完成", from:["m91","m92"], score:{NOR:"1",ENG:"2"}, note:"AET", actual:"ENG"},
+      qf4:{code:"QF4", time:"已完成", from:["m95","m96"], score:{ARG:"3",SUI:"1"}, note:"AET", actual:"ARG"},
       sf1:{code:"SF1", time:"4 強", from:["qf1","qf2"]},
       sf2:{code:"SF2", time:"4 強", from:["qf3","qf4"]},
       final:{code:"FINAL", time:"冠軍戰", from:["sf1","sf2"]}
     };
 
     const appData = {
-      updatedAt: "2026-07-11",
-      updatedLabel: "戰況更新：2026-07-11 11:50 TPE，已含西班牙 2-1 比利時",
-      nextUpdateLabel: "下次建議更新：7/12 07:15 TPE（挪威 vs 英格蘭賽後）",
+      updatedAt: "2026-07-12",
+      updatedLabel: "戰況更新：2026-07-12，四強確定：法國 vs 西班牙、英格蘭 vs 阿根廷",
+      nextUpdateLabel: "下次建議更新：7/15 05:15 TPE（法國 vs 西班牙賽後）",
       confirmedResults: [
         "8 強結果：法國 2-0 摩洛哥，晉級 4 強。",
         "8 強結果：西班牙 2-1 比利時，晉級 4 強，將對法國。",
+        "8 強結果：英格蘭 2-1 挪威，延長賽晉級 4 強，將對阿根廷。",
+        "8 強結果：阿根廷 3-1 瑞士，延長賽晉級 4 強，將對英格蘭。",
         "16 強結果：法國 1-0 巴拉圭。",
         "16 強結果：摩洛哥 3-0 加拿大。",
         "16 強結果：挪威 2-1 巴西。",
@@ -1089,9 +1091,7 @@
         "16 強結果：西班牙 1-0 葡萄牙。",
         "16 強結果：比利時 4-1 美國。",
         "16 強結果：阿根廷 3-2 埃及。",
-        "16 強結果：瑞士 0-0 哥倫比亞，PK 4-3 晉級。",
-        "8 強待賽：挪威 vs 英格蘭。",
-        "8 強待賽：阿根廷 vs 瑞士。"
+        "16 強結果：瑞士 0-0 哥倫比亞，PK 4-3 晉級。"
       ]
     };
 
