@@ -873,7 +873,7 @@
 <body>
   <header>
     <div>
-      <span class="status-pill"><span class="status-dot"></span><span id="updateStatusText">戰況更新：2026-07-12，四強確定：法國 vs 西班牙、英格蘭 vs 阿根廷｜下次建議更新：7/15 05:15 TPE（法國 vs 西班牙賽後）</span></span>
+      <span class="status-pill"><span class="status-dot"></span><span id="updateStatusText">戰況更新：2026-07-17，決賽確定：西班牙 vs 阿根廷｜下次建議更新：7/20 05:30 TPE（決賽賽後）</span></span>
       <h1>Knockout<br>Predictor</h1>
       <p class="subtitle">把靜態賽程圖改成可操作的冠軍預測器：已完成比賽自動鎖定，未開賽比賽顯示模型勝率，也能用保守、爆冷、狀態加權三種情境推演到冠軍。</p>
     </div>
@@ -1000,7 +1000,7 @@
     const teams = {
       GER:{name:"德國", flag:"🇩🇪", rating:87, signal:"Elo/賠率仍高，但已被巴拉圭淘汰"},
       PAR:{name:"巴拉圭", flag:"🇵🇾", rating:72, signal:"淘汰德國後上修，原始市場評價偏中段"},
-      FRA:{name:"法國", flag:"🇫🇷", rating:97, signal:"2-0 淘汰摩洛哥後晉級 4 強，防守穩定且進攻效率維持高檔。"},
+      FRA:{name:"法國", flag:"🇫🇷", rating:89, signal:"4 強 0-2 不敵西班牙，進攻核心被有效限制；仍將與英格蘭踢季軍戰。"},
       SWE:{name:"瑞典", flag:"🇸🇪", rating:77, signal:"歐洲中上游，已被法國淘汰"},
       RSA:{name:"南非", flag:"🇿🇦", rating:66, signal:"賽前模型偏低，已被加拿大淘汰"},
       CAN:{name:"加拿大", flag:"🇨🇦", rating:73, signal:"晉級後上修，但國際模型仍非奪冠熱門"},
@@ -1008,7 +1008,7 @@
       MAR:{name:"摩洛哥", flag:"🇲🇦", rating:78, signal:"防守與淘汰賽韌性加分，爆冷晉級後上修"},
       POR:{name:"葡萄牙", flag:"🇵🇹", rating:85, signal:"絕殺克羅埃西亞晉級後小幅上修；模型看好但路徑難度高。"},
       CRO:{name:"克羅埃西亞", flag:"🇭🇷", rating:76, signal:"淘汰賽經驗強，但整體賠率低於葡萄牙"},
-      ESP:{name:"西班牙", flag:"🇪🇸", rating:96, signal:"2-1 淘汰比利時後晉級 4 強，將對法國；控球與關鍵替補火力讓模型再上修。"},
+      ESP:{name:"西班牙", flag:"🇪🇸", rating:98, signal:"2-0 淘汰法國晉級決賽，本屆防守最穩、控球壓制力最完整；模型小幅看好奪冠。"},
       AUT:{name:"奧地利", flag:"🇦🇹", rating:75, signal:"歐洲穩定型球隊，模型仍視為下位挑戰者"},
       USA:{name:"美國", flag:"🇺🇸", rating:77, signal:"擊敗波士尼亞後曾上修；目前已淘汰，後續模型不再加權。"},
       BIH:{name:"波士尼亞", flag:"🇧🇦", rating:68, signal:"模型長線評估偏低"},
@@ -1020,9 +1020,9 @@
       NOR:{name:"挪威", flag:"🇳🇴", rating:80, signal:"8 強延長賽 1-2 不敵英格蘭出局；Haaland 被限制，但本屆爆冷淘汰巴西仍是亮點。"},
       MEX:{name:"墨西哥", flag:"🇲🇽", rating:79, signal:"擊敗厄瓜多後曾上修；目前已淘汰，後續模型不再加權。"},
       ECU:{name:"厄瓜多", flag:"🇪🇨", rating:76, signal:"防守與轉換強，模型評價接近墨西哥"},
-      ENG:{name:"英格蘭", flag:"🏴", rating:92, signal:"2-1 延長賽逆轉挪威晉級 4 強，Bellingham 梅開二度；韌性上修，但比賽內容仍有波動。"},
+      ENG:{name:"英格蘭", flag:"🏴", rating:88, signal:"4 強 1-2 遭阿根廷逆轉，無緣決賽；將與法國踢季軍戰。"},
       COD:{name:"剛果民主共和國", flag:"🇨🇩", rating:65, signal:"黑馬籤位，但資料模型分數偏低"},
-      ARG:{name:"阿根廷", flag:"🇦🇷", rating:95, signal:"3-1 延長賽淘汰瑞士晉級 4 強，深度與關鍵球能力再度展現，將對英格蘭。"},
+      ARG:{name:"阿根廷", flag:"🇦🇷", rating:97, signal:"2-1 逆轉英格蘭晉級決賽，Messi 連續製造關鍵球；進攻火力與大賽韌性讓模型緊追西班牙。"},
       CPV:{name:"維德角", flag:"🇨🇻", rating:64, signal:"本屆黑馬，但模型長線冠軍機率低"},
       AUS:{name:"澳洲", flag:"🇦🇺", rating:70, signal:"穩定但上限評價低於埃及"},
       EGY:{name:"埃及", flag:"🇪🇬", rating:76, signal:"個人能力與非洲賽事經驗加分"},
@@ -1070,16 +1070,18 @@
       qf2:{code:"QF2", time:"已完成", from:["m93","m94"], score:{ESP:"2",BEL:"1"}, actual:"ESP"},
       qf3:{code:"QF3", time:"已完成", from:["m91","m92"], score:{NOR:"1",ENG:"2"}, note:"AET", actual:"ENG"},
       qf4:{code:"QF4", time:"已完成", from:["m95","m96"], score:{ARG:"3",SUI:"1"}, note:"AET", actual:"ARG"},
-      sf1:{code:"SF1", time:"4 強", from:["qf1","qf2"]},
-      sf2:{code:"SF2", time:"4 強", from:["qf3","qf4"]},
-      final:{code:"FINAL", time:"冠軍戰", from:["sf1","sf2"]}
+      sf1:{code:"SF1", time:"已完成", from:["qf1","qf2"], score:{FRA:"0",ESP:"2"}, actual:"ESP"},
+      sf2:{code:"SF2", time:"已完成", from:["qf3","qf4"], score:{ENG:"1",ARG:"2"}, actual:"ARG"},
+      final:{code:"FINAL", time:"7/20 03:00 TPE", from:["sf1","sf2"]}
     };
 
     const appData = {
-      updatedAt: "2026-07-12",
-      updatedLabel: "戰況更新：2026-07-12，四強確定：法國 vs 西班牙、英格蘭 vs 阿根廷",
-      nextUpdateLabel: "下次建議更新：7/15 05:15 TPE（法國 vs 西班牙賽後）",
+      updatedAt: "2026-07-17",
+      updatedLabel: "戰況更新：2026-07-17，決賽確定：西班牙 vs 阿根廷",
+      nextUpdateLabel: "下次建議更新：7/20 05:30 TPE（決賽賽後）",
       confirmedResults: [
+        "4 強結果：西班牙 2-0 法國，晉級決賽。",
+        "4 強結果：阿根廷 2-1 英格蘭，晉級決賽。",
         "8 強結果：法國 2-0 摩洛哥，晉級 4 強。",
         "8 強結果：西班牙 2-1 比利時，晉級 4 強，將對法國。",
         "8 強結果：英格蘭 2-1 挪威，延長賽晉級 4 強，將對阿根廷。",
